@@ -1,14 +1,8 @@
 # CharCNN 
-<p align="center">
-    <img src='image/CharCNNlogo.png' width=200 class="center">
-</p>
 
 Our project is using the TensorFlow framework to implement the [CharCNN model](https://arxiv.org/abs/1509.01626) to classify English sentences. 
 
 ### Model Architecture
-<p align="center">
-    <img src='image/CharCNN-architecture2.png' width=500 class="center">
-</p>
 
 This model utilizes a convolutional neural network to extract features of sentences.
 ### Team
