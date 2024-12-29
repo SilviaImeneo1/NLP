@@ -3,13 +3,14 @@ from tensorflow.keras.initializers import RandomNormal
 import tensorflow as tf
 
 class CharCNN(tf.keras.models.Model):
-    def __init__(self, vocab_size, embedding_size, max_length, num_classes, feature='small', padding='same'):
+    def __init__(self, vocab_size, embedding_size, max_length, num_classes, feature='small', padding='same', trainable=True, name=None, dtype=None):
         super(CharCNN, self).__init__()
         assert feature in ['small', 'large'], "Feature must be either 'small' or 'large'"
         assert padding in ['valid', 'same'], "Padding must be either 'valid' or 'same'"
 
         self.padding = padding
         self.num_classes = num_classes
+        self.trainable = trainable
 
         # Configurations based on model size
         if feature == 'small':
@@ -30,29 +31,29 @@ class CharCNN(tf.keras.models.Model):
         self.max_length = max_length
 
         # Embedding layer
-        self.embedding = Embedding(self.vocab_size, self.embedding_size, input_length=self.max_length)
+        self.embedding = Embedding(self.vocab_size, self.embedding_size, input_length=self.max_length, trainable=self.trainable)
 
         # Convolutional blocks
-        self.conv1d_1 = Conv1D(self.num_filter, kernel_size=7, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
+        self.conv1d_1 = Conv1D(self.num_filter, kernel_size=7, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
         self.maxpooling1d_1 = MaxPooling1D(pool_size=3)
 
-        self.conv1d_2 = Conv1D(self.num_filter, kernel_size=7, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
+        self.conv1d_2 = Conv1D(self.num_filter, kernel_size=7, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
         self.maxpooling1d_2 = MaxPooling1D(pool_size=3)
 
-        self.conv1d_3 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
-        self.conv1d_4 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
-        self.conv1d_5 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
+        self.conv1d_3 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
+        self.conv1d_4 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
+        self.conv1d_5 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
 
-        self.conv1d_6 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding)
+        self.conv1d_6 = Conv1D(self.num_filter, kernel_size=3, kernel_initializer=self.initializers, activation='relu', padding=self.padding, trainable=self.trainable)
         self.maxpooling1d_6 = MaxPooling1D(pool_size=3)
 
         # Fully connected layers
         self.flatten = Flatten()
-        self.fc1 = Dense(self.units_fc, activation='relu')
+        self.fc1 = Dense(self.units_fc, activation='relu', trainable=self.trainable)
         self.drp1 = Dropout(0.5)
-        self.fc2 = Dense(self.units_fc, activation='relu')
+        self.fc2 = Dense(self.units_fc, activation='relu', trainable=self.trainable)
         self.drp2 = Dropout(0.5)
-        self.fc3 = Dense(self.num_classes, activation='softmax')
+        self.fc3 = Dense(self.num_classes, activation='softmax', trainable=self.trainable)
 
     def call(self, inputs):
         # Forward pass
@@ -72,3 +73,29 @@ class CharCNN(tf.keras.models.Model):
         outputs = self.fc3(x)
 
         return outputs
+
+    def get_config(self):
+        """Returns the config of the model for serialization."""
+        config = super(CharCNN, self).get_config()
+        config.update({
+            "vocab_size": self.vocab_size,
+            "embedding_size": self.embedding_size,
+            "max_length": self.max_length,
+            "num_classes": self.num_classes,
+            "feature": "small" if self.units_fc == 1024 else "large",
+            "padding": self.padding,
+            "trainable": self.trainable
+        })
+        return config
+
+    # @classmethod
+    # def from_config(cls, config):
+    #     """Creates a model instance from its config."""
+    #     return cls(**config)
+
+    @classmethod
+    def from_config(cls, config):
+      config = config.copy()  # Copia per evitare modifiche non volute
+      dtype = config.pop('dtype', None)  # Estrai 'dtype' dalla configurazione, se presente
+      # Resto della logica di deserializzazione
+      return cls(dtype=dtype, **config)  # Passa 'dtype' al costruttore
