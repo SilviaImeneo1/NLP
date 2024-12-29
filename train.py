@@ -42,6 +42,12 @@ if __name__ == "__main__":
     dataset = Dataset(vocab_folder=args.vocab_folder)
     x_train, x_val, y_train, y_val = dataset.build_dataset(data_path=args.train_file, test_size=args.test_size)
 
+    slice_idx = 100
+    x_train = x_train[:slice_idx]
+    x_val = x_val[:slice_idx]
+    y_train = y_train[:slice_idx]
+    y_val = y_val[:slice_idx]
+
     # Inizializzazione dei modelli
     print("------------- INITIALIZING MODELS ------------")
     small_CharCNN = CharCNN(
@@ -84,7 +90,10 @@ if __name__ == "__main__":
         )
         print("---------- FINISHED TRAINING SMALL CHARCNN --------")
         # Salvataggio del modello Small CharCNN
-        small_CharCNN.save(args.smallCharCNN_folder)
+        #small_CharCNN.save(args.smallCharCNN_folder)
+        os.makedirs(args.smallCharCNN_folder, exist_ok=True)  # Crea la cartella se non esiste
+        small_CharCNN.save(f"{args.smallCharCNN_folder}/model.keras")  # Salvataggio in formato Keras
+
 
     if args.mode in ['large', 'all']:
         print("------------- TRAINING LARGE CHARCNN ------------")
@@ -97,4 +106,6 @@ if __name__ == "__main__":
         )
         print("---------- FINISHED TRAINING LARGE CHARCNN --------")
         # Salvataggio del modello Large CharCNN
-        large_CharCNN.save(args.largeCharCNN_folder)
+        #large_CharCNN.save(args.largeCharCNN_folder)
+        os.makedirs(args.largeCharCNN_folder, exist_ok=True)  # Crea la cartella se non esiste
+        large_CharCNN.save(f"{args.largeCharCNN_folder}/model.keras")  # Salvataggio in formato Keras
