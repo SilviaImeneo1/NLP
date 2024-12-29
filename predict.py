@@ -53,7 +53,8 @@ if __name__ == "__main__":
     sentences = test_data['sentence'].values
     preprocessed_sentences = [dataset.preprocess_data(s) for s in sentences]
     tokenized_sentences = dataset.tokenizer.texts_to_sequences(preprocessed_sentences)
-    max_len = model.input_shape[1]  # Lunghezza massima dall'input del modello
+    #max_len = model.input_shape[1]  # Lunghezza massima dall'input del modello
+    max_len = model.max_length
     padded_sentences = pad_sequences(tokenized_sentences, maxlen=max_len, padding='post')
 
     # Predizione
