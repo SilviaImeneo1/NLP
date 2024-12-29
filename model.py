@@ -2,9 +2,9 @@ from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, De
 from tensorflow.keras.initializers import RandomNormal
 import tensorflow as tf
 
-class CharCNN(tf.keras.models.Model):
-    def __init__(self, vocab_size, embedding_size, max_length, num_classes, feature='small', padding='same', trainable=True, name=None, dtype=None):
-        super(CharCNN, self).__init__()
+class CharCNN(tf.keras.Model):
+    def __init__(self, vocab_size, embedding_size, max_length, num_classes, feature='small', padding='same', trainable=True, name=None, dtype=None,input_shape=None):
+        super(CharCNN, self).__init__(name=name, dtype=dtype)
         assert feature in ['small', 'large'], "Feature must be either 'small' or 'large'"
         assert padding in ['valid', 'same'], "Padding must be either 'valid' or 'same'"
 
