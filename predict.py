@@ -20,11 +20,6 @@ if __name__ == "__main__":
 
     # Informazioni di benvenuto
     print('---------------------Welcome to CharCNN-------------------')
-    print("Team Leader")
-    print("1. Github: hoangcaobao")
-    print("Team member")
-    print('1. Github: Nguyendat-bit')
-    print('2. Github: aestheteeism')
     print('----------------------------------------------------------')
     print('Caricamento dei parametri di configurazione:')
     for i, arg in enumerate(vars(args)):
@@ -34,9 +29,11 @@ if __name__ == "__main__":
     # Caricamento del modello
     print('============= Caricamento del modello =============')
     if args.model == "small":
-        model = tf.keras.models.load_model(args.smallCharCNN_folder)
+        model_path = os.path.join(args.smallCharCNN_folder, "model.keras")
+        model = tf.keras.models.load_model(model_path)
     else:
-        model = tf.keras.models.load_model(args.largeCharCNN_folder)
+        model_path = os.path.join(args.largeCharCNN_folder, "model.keras")
+        model = tf.keras.models.load_model(model_path)
     print(f'Modello {args.model} caricato con successo.')
 
     # Caricamento del tokenizer
