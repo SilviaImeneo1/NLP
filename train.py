@@ -7,7 +7,7 @@ from constant import *
 from tensorflow.keras.optimizers import Adam
 
 # Abilita il funzionamento eager (se necessario)
-tf.config.experimental_run_functions_eagerly(True)
+tf.config.run_functions_eagerly(True)
 
 if __name__ == "__main__":
     parser = ArgumentParser()
