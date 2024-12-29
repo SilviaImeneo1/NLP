@@ -1,76 +1,105 @@
 import os
 from argparse import ArgumentParser
 from data import Dataset
-import pandas as pd 
-from model import *
+from model import CharCNN
 import tensorflow as tf
 from constant import *
-from tensorflow.keras.optimizers import *
+from tensorflow.keras.optimizers import Adam
+
+# Abilita il funzionamento eager (se necessario)
 tf.config.experimental_run_functions_eagerly(True)
+
 if __name__ == "__main__":
     parser = ArgumentParser()
-    home_dir = os.getcwd()    
-    # Arguments users used when running command lines
-    parser.add_argument("--batch-size", default=128, type=int)
-    parser.add_argument("--mode",default= "small", type= str)
-    parser.add_argument("--vocab-folder", default= '{}/saved_vocab/CharCNN/'.format(home_dir), type= str)
-    parser.add_argument("--train-file", default= 'data.csv', type= str)
-    parser.add_argument("--epochs", default=3, type=int)
-    parser.add_argument("--embedding-size", default=100, type=int)
-    parser.add_argument("--test-size", default=0.3, type=float)
-    parser.add_argument("--num-classes", default=2, type=float)
-    parser.add_argument("--learning-rate", default=0.001, type=float)
-    parser.add_argument("--smallCharCNN-folder", default="smallCharCNN", type=str)
-    parser.add_argument("--largeCharCNN-folder", default="largeCharCNN", type=str)
-    parser.add_argument("--padding", default="same", type=str)
+    home_dir = os.getcwd()
+
+    # Definizione dei parametri accettati da linea di comando
+    parser.add_argument("--batch-size", default=128, type=int, help="Dimensione del batch per l'addestramento")
+    parser.add_argument("--mode", default="small", type=str, help="Modalità del modello: 'small', 'large' o 'all'")
+    parser.add_argument("--vocab-folder", default=f'{home_dir}/saved_vocab/CharCNN/', type=str, help="Cartella per salvare il vocabolario")
+    parser.add_argument("--train-file", default='data.csv', type=str, help="Percorso del file di addestramento")
+    parser.add_argument("--epochs", default=3, type=int, help="Numero di epoche")
+    parser.add_argument("--embedding-size", default=100, type=int, help="Dimensione degli embeddings")
+    parser.add_argument("--test-size", default=0.3, type=float, help="Percentuale di dati di test")
+    parser.add_argument("--num-classes", default=2, type=int, help="Numero di classi di output")
+    parser.add_argument("--learning-rate", default=0.001, type=float, help="Learning rate per l'ottimizzatore")
+    parser.add_argument("--smallCharCNN-folder", default="smallCharCNN", type=str, help="Cartella per salvare il modello Small CharCNN")
+    parser.add_argument("--largeCharCNN-folder", default="largeCharCNN", type=str, help="Cartella per salvare il modello Large CharCNN")
+    parser.add_argument("--padding", default="same", type=str, help="Modalità di padding: 'same' o 'valid'")
 
     args = parser.parse_args()
 
-    print('---------------------Welcome to CharCNN-------------------')
+    # Messaggio introduttivo
+    print('--------------------- Welcome to CharCNN -------------------')
     print("Team Leader")
     print("1. Github: hoangcaobao")
-    print("Team member")
-    print('1. Github: Nguyendat-bit')
-    print('2. Github: aestheteeism')
+    print("Team Members")
+    print("1. Github: Nguyendat-bit")
+    print("2. Github: aestheteeism")
     print('---------------------------------------------------------------------')
-    print('Training CharCNN model with hyper-params:') 
+    print('Training CharCNN model with the following hyperparameters:')
     for i, arg in enumerate(vars(args)):
-        print('{}. {}: {}'.format(i, arg, vars(args)[arg]))
-    print('===========================')
+        print(f'{i + 1}. {arg}: {vars(args)[arg]}')
+    print('=====================================================================')
 
-    # Load data 
-    print("-------------TRAINING DATA------------")
+    # Caricamento dei dati
+    print("------------- LOADING TRAINING DATA ------------")
+    dataset = Dataset(vocab_folder=args.vocab_folder)
+    x_train, x_val, y_train, y_val = dataset.build_dataset(data_path=args.train_file, test_size=args.test_size)
 
+    # Inizializzazione dei modelli
+    print("------------- INITIALIZING MODELS ------------")
+    small_CharCNN = CharCNN(
+        vocab_size=dataset.vocab_size,
+        embedding_size=args.embedding_size,
+        max_len=dataset.max_len,
+        num_classes=args.num_classes,
+        feature="small",
+        padding=args.padding
+    )
 
-    dataset = Dataset(vocab_folder= args.vocab_folder)
-    x_train, x_val, y_train, y_val = dataset.build_dataset(data_path = args.train_file, test_size= args.test_size)
+    large_CharCNN = CharCNN(
+        vocab_size=dataset.vocab_size,
+        embedding_size=args.embedding_size,
+        max_len=dataset.max_len,
+        num_classes=args.num_classes,
+        feature="large",
+        padding=args.padding
+    )
 
-    # Initializing models
-    # Small-CharCNN
-    small_CharCNN = CharCNN(dataset.vocab_size, args.embedding_size, dataset.max_len, args.num_classes, feature = "small", padding= args.padding)
-    # Large-CharCNN
-    large_CharCNN = CharCNN(dataset.vocab_size, args.embedding_size, dataset.max_len, args.num_classes, feature = "large", padding= args.padding)
-
-    # Set up loss function
+    # Definizione della funzione di perdita
     loss = tf.keras.losses.SparseCategoricalCrossentropy()
 
-    # Optimizer Definition
-    adam = tf.keras.optimizers.Adam(learning_rate= args.learning_rate)
+    # Definizione dell'ottimizzatore
+    adam = Adam(learning_rate=args.learning_rate)
 
-    # Compile optimizer and loss function into models
-    small_CharCNN.compile(optimizer= adam, loss = loss, metrics  = [metric])
-    large_CharCNN.compile(optimizer= adam, loss = loss, metrics = [metric])
+    # Compilazione dei modelli
+    small_CharCNN.compile(optimizer=adam, loss=loss, metrics=["accuracy"])
+    large_CharCNN.compile(optimizer=adam, loss=loss, metrics=["accuracy"])
 
-    # Do Training model
-    if args.mode == 'small' or args.mode == 'all':
-        print("-------------Training Small CharCNN------------")
-        small_CharCNN.fit(x_train,y_train,validation_data= (x_val,y_val), epochs= args.epochs, batch_size= args.batch_size, validation_batch_size= args.batch_size)
-        print("----------Finish Training Small CharCNN--------")
-        # Saving models
+    # Addestramento del modello
+    if args.mode in ['small', 'all']:
+        print("------------- TRAINING SMALL CHARCNN ------------")
+        small_CharCNN.fit(
+            x_train, y_train,
+            validation_data=(x_val, y_val),
+            epochs=args.epochs,
+            batch_size=args.batch_size,
+            validation_batch_size=args.batch_size
+        )
+        print("---------- FINISHED TRAINING SMALL CHARCNN --------")
+        # Salvataggio del modello Small CharCNN
         small_CharCNN.save(args.smallCharCNN_folder)
-    if args.mode == 'large' or args.mode == 'all':
-        print("-------------Training Large CharCNN------------")
-        large_CharCNN.fit(x_train,y_train, validation_data= (x_val,y_val), epochs= args.epochs, batch_size = args.batch_size, validation_batch_size = args.batch_size)
-        print("----------Finish Training Large CharCNN--------")
-        # Saving models
+
+    if args.mode in ['large', 'all']:
+        print("------------- TRAINING LARGE CHARCNN ------------")
+        large_CharCNN.fit(
+            x_train, y_train,
+            validation_data=(x_val, y_val),
+            epochs=args.epochs,
+            batch_size=args.batch_size,
+            validation_batch_size=args.batch_size
+        )
+        print("---------- FINISHED TRAINING LARGE CHARCNN --------")
+        # Salvataggio del modello Large CharCNN
         large_CharCNN.save(args.largeCharCNN_folder)
