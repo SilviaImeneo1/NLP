@@ -52,7 +52,7 @@ if __name__ == "__main__":
     small_CharCNN = CharCNN(
         vocab_size=dataset.vocab_size,
         embedding_size=args.embedding_size,
-        max_len=dataset.max_len,
+        max_length=dataset.max_len,
         num_classes=args.num_classes,
         feature="small",
         padding=args.padding
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     large_CharCNN = CharCNN(
         vocab_size=dataset.vocab_size,
         embedding_size=args.embedding_size,
-        max_len=dataset.max_len,
+        max_length=dataset.max_len,
         num_classes=args.num_classes,
         feature="large",
         padding=args.padding
