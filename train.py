@@ -42,7 +42,7 @@ if __name__ == "__main__":
     dataset = Dataset(vocab_folder=args.vocab_folder)
     x_train, x_val, y_train, y_val = dataset.build_dataset(data_path=args.train_file, test_size=args.test_size)
 
-    slice_idx = 70
+    slice_idx = 5000
     x_train = x_train[:slice_idx]
     x_val = x_val[:slice_idx]
     y_train = y_train[:slice_idx]
