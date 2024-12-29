@@ -31,11 +31,6 @@ if __name__ == "__main__":
 
     # Messaggio introduttivo
     print('--------------------- Welcome to CharCNN -------------------')
-    print("Team Leader")
-    print("1. Github: hoangcaobao")
-    print("Team Members")
-    print("1. Github: Nguyendat-bit")
-    print("2. Github: aestheteeism")
     print('---------------------------------------------------------------------')
     print('Training CharCNN model with the following hyperparameters:')
     for i, arg in enumerate(vars(args)):
