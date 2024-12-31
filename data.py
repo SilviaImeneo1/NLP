@@ -59,9 +59,14 @@ class Dataset:
         clean_text = re.sub(cleanr, '', data)
         return clean_text
 
+    def remove_special_symbols(self, text):   #aggiunto per pulizia csv Amazon. Aggiunto anche "self.remove_special_symbols" nella funzione qui sotto
+        # Remove unwanted symbols like ", ', [, ]"
+        clean_text = re.sub(r'[",\'\[\]]', '', text)
+        return clean_text
+
     def preprocess_data(self, text):
         # Pulisce il testo usando le funzioni di regex definite
-        processors = [self.remove_punc, self.remove_html, self.remove_urls, self.remove_emoji]
+        processors = [self.remove_punc, self.remove_html, self.remove_urls, self.remove_emoji, self.remove_special_symbols]
         for process in processors:
             text = process(text)
         return text
