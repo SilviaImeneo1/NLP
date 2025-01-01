@@ -19,31 +19,30 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Informazioni di benvenuto
-    print('---------------------Welcome to CharCNN-------------------')
     print('----------------------------------------------------------')
-    print('Caricamento dei parametri di configurazione:')
+    print('Hyperparameters:')
     for i, arg in enumerate(vars(args)):
         print(f'{i+1}. {arg}: {vars(args)[arg]}')
     print('==========================================================')
 
     # Caricamento del modello
-    print('============= Caricamento del modello =============')
+    print('Loading the model')
     if args.model == "small":
         model_path = os.path.join(args.smallCharCNN_folder, "model.keras")
         model = tf.keras.models.load_model(model_path)
     else:
         model_path = os.path.join(args.largeCharCNN_folder, "model.keras")
         model = tf.keras.models.load_model(model_path)
-    print(f'Modello {args.model} caricato con successo.')
+    print(f'Model {args.model} loaded.')
 
     # Caricamento del tokenizer
-    print('============= Caricamento del tokenizer ===========')
+    print('Loading tokenizer')
     dataset = Dataset(vocab_folder=args.vocab_folder)
     label_dict = dataset.label_dict
-    print('Tokenizer caricato con successo.')
+    print('Tokenizer loaded')
 
     # Caricamento e preprocessing dei dati di test
-    print('============= Preprocessing dei dati di test ======')
+    print('Preprocessing of test data')
     try:
         test_data = pd.read_csv(args.test_file, header=None, names=['sentence'])
     except FileNotFoundError:
@@ -58,7 +57,7 @@ if __name__ == "__main__":
     padded_sentences = pad_sequences(tokenized_sentences, maxlen=max_len, padding='post')
 
     # Predizione
-    print('============= Predizione ==========================')
+    print('Prediction')
     predictions = model.predict(padded_sentences)
     predicted_labels = np.argmax(predictions, axis=1)
 
@@ -67,7 +66,7 @@ if __name__ == "__main__":
     decoded_labels = [reverse_label_dict[label] for label in predicted_labels]
 
     # Salvataggio dei risultati
-    print('============= Salvataggio dei risultati ===========')
+    print('Saving predictions')
     result_df = pd.DataFrame({'sentence': sentences, 'label': decoded_labels})
     result_df.to_csv(args.result_file, index=False)
-    print(f"Predizioni salvate in {args.result_file}")
+    print(f"Predictions saved in {args.result_file}")
