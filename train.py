@@ -42,11 +42,11 @@ if __name__ == "__main__":
     x_train, x_val, y_train, y_val = dataset.build_dataset(data_path=args.train_file, test_size=args.test_size)
 
     # Limit the data size (to reduce computational load during testing)
-    slice_idx = 5000
-    x_train = x_train[:slice_idx]
-    x_val = x_val[:slice_idx]
-    y_train = y_train[:slice_idx]
-    y_val = y_val[:slice_idx]
+    # slice_idx = 5000
+    # x_train = x_train[:slice_idx]
+    # x_val = x_val[:slice_idx]
+    # y_train = y_train[:slice_idx]
+    # y_val = y_val[:slice_idx]
 
     print('---------------------------------------------------------------------')
     print("Initializing small and large models")
