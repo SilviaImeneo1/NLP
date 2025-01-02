@@ -2,7 +2,7 @@
 
 This project is an adaptation of the work from https://github.com/protonx-tf-03-projects/CharCNN
 The objective is to use TensorFlow framework to implement the character-level CNN to perform English text classification.
-It is based on the paper ]"Character-level Convolutional Networks for Text Classification" by Xiang Zhang, Junbo Zhao, Yann LeCun] (https://arxiv.org/abs/1509.01626).
+It is based on the paper ["Character-level Convolutional Networks for Text Classification" by Xiang Zhang, Junbo Zhao, Yann LeCun] (https://arxiv.org/abs/1509.01626).
 
 ### Model Architecture
 
