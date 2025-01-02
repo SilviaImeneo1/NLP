@@ -1,4 +1,4 @@
-# Chararcter-level CNN 
+# Character-level CNN 
 
 This project is an adaptation of the work from https://github.com/protonx-tf-03-projects/CharCNN.  
 The objective is to use TensorFlow framework to implement the character-level CNN to perform English text classification.  
