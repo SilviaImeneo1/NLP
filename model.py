@@ -95,7 +95,7 @@ class CharCNN(tf.keras.Model):
 
     @classmethod
     def from_config(cls, config):
-      config = config.copy()  # Copia per evitare modifiche non volute
-      dtype = config.pop('dtype', None)  # Estrai 'dtype' dalla configurazione, se presente
+      config = config.copy()
+      dtype = config.pop('dtype', None)
       # Resto della logica di deserializzazione
-      return cls(dtype=dtype, **config)  # Passa 'dtype' al costruttore
+      return cls(dtype=dtype, **config)
