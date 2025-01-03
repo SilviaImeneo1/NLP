@@ -37,6 +37,7 @@ if __name__ == "__main__":
     
     print('---------------------------------------------------------------------')
     print("Loading the dataset")
+    os.makedirs(args.vocab_folder, exist_ok=True)   # Create vocab-folder if it doesn't exist   
     dataset = Dataset(vocab_folder=args.vocab_folder)  # Initialize the dataset with the saved vocabulary
     # Split the data into training and validation sets
     x_train, x_val, y_train, y_val = dataset.build_dataset(data_path=args.train_file, test_size=args.test_size)
