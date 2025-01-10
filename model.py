@@ -8,6 +8,7 @@ class CharCNN(tf.keras.Model):
         assert feature in ['small', 'large'], "Feature must be either 'small' or 'large'"
         assert padding in ['valid', 'same'], "Padding must be either 'valid' or 'same'"
 
+        #assigning values passed as arguments to instance variables of the CharCNN object
         self.padding = padding
         self.num_classes = num_classes
         self.trainable = trainable
