@@ -59,14 +59,9 @@ class Dataset:
         clean_text = re.sub(cleanr, '', data)
         return clean_text
 
-    def remove_special_symbols(self, text):
-        # Remove unwanted symbols like ", ', [, ]"
-        clean_text = re.sub(r'[",\'\[\]]', '', text)
-        return clean_text
-
     def preprocess_data(self, text):
         # Cleaning text using defined regex functions
-        processors = [self.remove_punc, self.remove_html, self.remove_urls, self.remove_emoji, self.remove_special_symbols]
+        processors = [self.remove_punc, self.remove_html, self.remove_urls, self.remove_emoji]
         for process in processors:
             text = process(text)
         return text
