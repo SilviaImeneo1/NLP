@@ -12,3 +12,5 @@ This model utilizes a convolutional neural network to extract features of senten
 
 The dataset used is the Amazon Reviews for Sentiment Analysis (https://www.kaggle.com/datasets/bittlingmayer/amazonreviews).
 
+## Colab
+You can replicate the steps performed by following this Colab https://colab.research.google.com/drive/1EusrIZ0Uqx1DyhQlK49d1b0EPz1N6Nxe#scrollTo=XoQJF0zrEKS6
