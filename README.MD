@@ -9,4 +9,4 @@ The code is an adaptation of the work from https://github.com/protonx-tf-03-proj
 ### Implementation
 The dataset used is the [Amazon Reviews for Sentiment Analysis](https://www.kaggle.com/datasets/bittlingmayer/amazonreviews), which has been cleaned by using the steps indicated in [this Colab](https://colab.research.google.com/drive/1hL6OKiYTZLcV7mN5-W1xCv5GCRhwqnTW).
 
-The steps performed in the analysis can be replicated by following the instructions on [this other Colab](https://colab.research.google.com/drive/1EusrIZ0Uqx1DyhQlK49d1b0EPz1N6Nxe#scrollTo=XoQJF0zrEKS6).
+The training and testing steps performed in the analysis can be replicated by following the instructions on [this other Colab](https://colab.research.google.com/drive/1EusrIZ0Uqx1DyhQlK49d1b0EPz1N6Nxe#scrollTo=XoQJF0zrEKS6).
