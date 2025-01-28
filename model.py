@@ -98,5 +98,4 @@ class CharCNN(tf.keras.Model):
     def from_config(cls, config):
       config = config.copy()
       dtype = config.pop('dtype', None)
-      # Resto della logica di deserializzazione
       return cls(dtype=dtype, **config)
