@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument("--vocab-folder", default=f'{home_dir}/saved_vocab/CharCNN/', type=str, help="Folder to save the vocabulary")
     parser.add_argument("--train-file", default='data.csv', type=str, help="Path to the training file")
     parser.add_argument("--epochs", default=3, type=int, help="Number of epochs for training")
-    parser.add_argument("--embedding-size", default=100, type=int, help="Size of the embeddings")
+    parser.add_argument("--embedding-size", default=70, type=int, help="Size of the embeddings")
     parser.add_argument("--test-size", default=0.3, type=float, help="Percentage of data for testing")
     parser.add_argument("--num-classes", default=2, type=int, help="Number of output classes")
     parser.add_argument("--learning-rate", default=0.001, type=float, help="Learning rate for the optimizer")
